@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 #from gui import *
+import os
 import random
-
+import time
 ######################
-#FUNCIONES
+#FUNCTIONS USED
 ######################
 
 #Generates a grid full of 0's
@@ -23,18 +24,18 @@ def render(grid):
 			if grid[i][j]==1:
 				print ('o'+' ',end="")
 			else:
-				print ('#'+' ',end="")
+				print (' '+' ',end="")
 		print ('\r')
 
 #Implemenattion of the rules of the game to create the next state
 def nextboardstate(oldstate,w,h):
 	vivas=0;
 	newstate = deadGrid(w,h)
-	for i in range(len(oldstate)):
-		for j in range(len(oldstate[i])):
+	for i in range(0,w-1):
+		for j in range(0,h-1):
 			vivas = checkNeighbours(oldstate,i,j)
 			if oldstate[i][j]==1:
-				if vivas == 2 or vivas == 3:
+				if (vivas == 2 or vivas == 3):
 					newstate[i][j]=1
 				
 			elif oldstate[i][j]==0:
@@ -47,19 +48,34 @@ def nextboardstate(oldstate,w,h):
 #Checks every neighbour cell and returns the number of alive neighbour cells
 def checkNeighbours(state,i,j):
 	vivas = 0
-	for x in range(i-1,i+1):
-		for y in range(j-1,j+1):
-			if state[x][y]==1:
-				vivas+=1
-	if state[i][j]==1:
-		vivas-=1
-
+	if state[i-1][j-1]==1:
+		vivas+=1
+	if state[i-1][j]==1:
+		vivas+=1
+	if state[i-1][j+1]==1:
+		vivas+=1
+	if state[i][j-1]==1:
+		vivas+=1
+	if state[i][j+1]==1:
+		vivas+=1
+	if state[i+1][j-1]==1:
+		vivas+=1
+	if state[i+1][j]==1:
+		vivas+=1
+	if state[i+1][j+1]==1:
+		vivas+=1
 	return vivas
-######################
 
-w = 10
-h = 10
+######################
+w = 30
+h = 30
+out = True
 state =rndGrid(w,h)
-render(state)
-print ("Next:")
-render(nextboardstate(state,w,h))
+while out == True:
+	if state != nextboardstate(state,w,h):
+		render(state)
+		state = nextboardstate(state,w,h)
+		time.sleep(.3)
+		os.system('cls' if os.name == 'nt' else "printf '\033c'")
+	else:
+		out = False
