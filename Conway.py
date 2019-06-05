@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-#from gui import *
 import os
 import random
 import time
